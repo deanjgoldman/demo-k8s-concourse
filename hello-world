@@ -1,3 +1,3 @@
 #!/bin/sh
 
-echo "helloo ${NAME:-world}"
+echo "hellooo ${NAME:-world}"
