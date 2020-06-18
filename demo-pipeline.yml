@@ -1,0 +1,49 @@
+---
+resources:
+  - name: resource-demo
+    type: git
+    icon: github
+    source:
+      uri: ((github-uri))
+      branch: ((github-branch))
+
+  - name: hello-world-docker-image
+    type: docker-image
+    source:
+      email: ((docker-email))
+      username: ((docker-hub-username))
+      password: ((docker-hub-password))
+      repository: ((docker-hub-username))/((docker-hub-repo))
+
+#  - name: my-timer
+#    type: time
+#    source:
+#      interval: 2m
+
+jobs:
+  - name: publish
+    public: true
+    plan:
+      - get: resource-demo
+        trigger: true
+      - put: hello-world-docker-image
+        params:
+          build: .
+  - name: job-hello-world
+    public: true
+    serial: true
+    plan:
+      - get: resource-demo
+        trigger: true
+      - task: run
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ((docker-hub-username))/((docker-hub-repo))
+          run:
+            path: /bin/hello-world
+            args: []
+          params:
+            NAME: ((docker-hub-username))
