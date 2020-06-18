@@ -1,4 +1,6 @@
-FROM dockercloud/hello-world
-ADD index.php /www/index.php
-ADD test_img.png /www/test_img.png
+FROM busybox
 
+ADD hello-world /bin/hello-world
+
+ENV NAME=world
+ENTRYPOINT ["/bin/hello-world"]
